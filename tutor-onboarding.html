@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Tutor Onboarding</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-btn:hover {
+        text-decoration: underline;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .helper-text {
+        color: #888;
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s ease;
+      }
+
+      input[type="text"]:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .multi-select-container {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.75rem;
+        min-height: 120px;
+        background: #f9f9f9;
+      }
+
+      .multi-select-container:focus-within {
+        border-color: #667eea;
+        background: white;
+      }
+
+      .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .chip {
+        background: #f0f2f5;
+        border: 2px solid transparent;
+        color: #333;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+      }
+
+      .chip:hover {
+        background: #e6e9f0;
+      }
+
+      .chip.selected {
+        background: #667eea;
+        color: white;
+        border-color: #5a6fd8;
+      }
+
+      .helper-note {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 0.5rem;
+      }
+
+      .continue-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+      }
+
+      .continue-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .continue-btn:focus {
+        outline: 3px solid #4c9aff;
+        outline-offset: 2px;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .form-group.error input,
+      .form-group.error textarea,
+      .form-group.error .multi-select-container {
+        border-color: #e74c3c;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 0;
+          padding: 1.5rem;
+          border-radius: 0;
+          min-height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+
+      <div class="header">
+        <h1>Welcome, Tutor!</h1>
+        <div class="subtitle">Tell us about your teaching experience</div>
+        <div class="helper-text">You can update this information anytime</div>
+      </div>
+
+      <form id="tutorOnboardingForm">
+        <div class="form-group">
+          <label for="tutorName">Your Name</label>
+          <input
+            type="text"
+            id="tutorName"
+            placeholder="Enter your full name"
+            required
+          />
+          <div class="error-message" id="name-error">
+            Please enter your name
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Subjects You Teach</label>
+          <div class="multi-select-container" tabindex="0">
+            <div class="chips-container" id="subjectsContainer">
+              <div class="chip" data-subject="math">Mathematics</div>
+              <div class="chip" data-subject="science">Science</div>
+              <div class="chip" data-subject="english">English</div>
+              <div class="chip" data-subject="ict">ICT</div>
+              <div class="chip" data-subject="history">History</div>
+              <div class="chip" data-subject="geography">Geography</div>
+              <div class="chip" data-subject="art">Art</div>
+              <div class="chip" data-subject="music">Music</div>
+              <div class="chip" data-subject="pe">Physical Education</div>
+            </div>
+          </div>
+          <div class="helper-note">
+            Select all subjects you're comfortable teaching
+          </div>
+          <div class="error-message" id="subjects-error">
+            Please select at least one subject
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Grades You Teach</label>
+          <div class="multi-select-container" tabindex="0">
+            <div class="chips-container" id="gradesContainer">
+              <div class="chip" data-grade="grade-6">Grade 6</div>
+              <div class="chip" data-grade="grade-7">Grade 7</div>
+              <div class="chip" data-grade="grade-8">Grade 8</div>
+              <div class="chip" data-grade="grade-9">Grade 9</div>
+              <div class="chip" data-grade="grade-10">Grade 10</div>
+              <div class="chip" data-grade="grade-11">Grade 11</div>
+              <div class="chip" data-grade="grade-12">Grade 12</div>
+              <div class="chip" data-grade="university">University</div>
+            </div>
+          </div>
+          <div class="helper-note">Select all grade levels you teach</div>
+          <div class="error-message" id="grades-error">
+            Please select at least one grade level
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Short Bio</label>
+          <textarea
+            id="bio"
+            placeholder="Tell students a bit about yourself, your teaching style, and experience..."
+            maxlength="300"
+          ></textarea>
+          <div class="helper-note">
+            Keep it friendly and encouraging (optional)
+          </div>
+        </div>
+
+        <button type="submit" class="continue-btn">Save and Continue</button>
+      </form>
+    </div>
+
+    <script>
+      // Global variables
+      let selectedSubjects = [];
+      let selectedGrades = [];
+
+      // Initialize the form
+      window.onload = function () {
+        setupChipSelection();
+        loadExistingProfile();
+      };
+
+      // Load existing profile if it exists
+      function loadExistingProfile() {
+        // In real environment: const profile = JSON.parse(localStorage.getItem('tutorProfile') || '{}');
+        // For demo, check URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasProfile = urlParams.get("hasProfile") === "true";
+
+        if (hasProfile) {
+          // Simulate existing data
+          document.getElementById("tutorName").value = "Dr. Sarah Johnson";
+          document.getElementById("bio").value =
+            "Experienced mathematics teacher with 8+ years of helping students excel. I believe every student can succeed with the right approach and encouragement!";
+
+          selectedSubjects = ["math", "science"];
+          selectedGrades = ["grade-9", "grade-10", "grade-11"];
+
+          updateChipSelections();
+        }
+      }
+
+      // Setup chip selection interactions
+      function setupChipSelection() {
+        // Subject chips
+        const subjectChips = document.querySelectorAll(
+          "#subjectsContainer .chip"
+        );
+        subjectChips.forEach((chip) => {
+          chip.addEventListener("click", function () {
+            const subject = this.dataset.subject;
+            toggleSelection(selectedSubjects, subject);
+            this.classList.toggle("selected");
+            clearError("subjects");
+          });
+        });
+
+        // Grade chips
+        const gradeChips = document.querySelectorAll("#gradesContainer .chip");
+        gradeChips.forEach((chip) => {
+          chip.addEventListener("click", function () {
+            const grade = this.dataset.grade;
+            toggleSelection(selectedGrades, grade);
+            this.classList.toggle("selected");
+            clearError("grades");
+          });
+        });
+      }
+
+      // Toggle selection in array
+      function toggleSelection(array, item) {
+        const index = array.indexOf(item);
+        if (index > -1) {
+          array.splice(index, 1);
+        } else {
+          array.push(item);
+        }
+      }
+
+      // Update chip visual selections
+      function updateChipSelections() {
+        // Update subjects
+        const subjectChips = document.querySelectorAll(
+          "#subjectsContainer .chip"
+        );
+        subjectChips.forEach((chip) => {
+          const subject = chip.dataset.subject;
+          if (selectedSubjects.includes(subject)) {
+            chip.classList.add("selected");
+          }
+        });
+
+        // Update grades
+        const gradeChips = document.querySelectorAll("#gradesContainer .chip");
+        gradeChips.forEach((chip) => {
+          const grade = chip.dataset.grade;
+          if (selectedGrades.includes(grade)) {
+            chip.classList.add("selected");
+          }
+        });
+      }
+
+      // Form validation
+      function validateForm() {
+        let isValid = true;
+        clearAllErrors();
+
+        // Validate name
+        const name = document.getElementById("tutorName").value.trim();
+        if (!name) {
+          showError("name", "Please enter your name");
+          isValid = false;
+        }
+
+        // Validate subjects
+        if (selectedSubjects.length === 0) {
+          showError("subjects", "Please select at least one subject");
+          isValid = false;
+        }
+
+        // Validate grades
+        if (selectedGrades.length === 0) {
+          showError("grades", "Please select at least one grade level");
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // Show error message
+      function showError(field, message) {
+        const formGroup =
+          document
+            .getElementById(field === "name" ? "tutorName" : field)
+            .closest(".form-group") ||
+          document.querySelector(`#${field}-error`).closest(".form-group");
+        const errorElement = document.getElementById(`${field}-error`);
+
+        formGroup.classList.add("error");
+        errorElement.textContent = message;
+        errorElement.classList.add("show");
+      }
+
+      // Clear specific error
+      function clearError(field) {
+        const formGroup =
+          document
+            .getElementById(field === "name" ? "tutorName" : field)
+            ?.closest(".form-group") ||
+          document.querySelector(`#${field}-error`)?.closest(".form-group");
+        const errorElement = document.getElementById(`${field}-error`);
+
+        if (formGroup) formGroup.classList.remove("error");
+        if (errorElement) errorElement.classList.remove("show");
+      }
+
+      // Clear all errors
+      function clearAllErrors() {
+        const errorElements = document.querySelectorAll(".error-message");
+        const formGroups = document.querySelectorAll(".form-group");
+
+        errorElements.forEach((el) => el.classList.remove("show"));
+        formGroups.forEach((el) => el.classList.remove("error"));
+      }
+
+      // Handle form submission
+      document
+        .getElementById("tutorOnboardingForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (validateForm()) {
+            const profile = {
+              name: document.getElementById("tutorName").value.trim(),
+              subjects: selectedSubjects,
+              grades: selectedGrades,
+              bio: document.getElementById("bio").value.trim(),
+            };
+
+            // In real environment: localStorage.setItem('tutorProfile', JSON.stringify(profile));
+            console.log("Tutor Profile:", profile);
+
+            // Navigate to dashboard
+            window.location.href = "tutor-dashboard.html?profileSaved=true";
+          }
+        });
+
+      // Clear errors on input
+      document
+        .getElementById("tutorName")
+        .addEventListener("input", () => clearError("name"));
+
+      // Go back function
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  </body>
+</html>

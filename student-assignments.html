@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Assignments & Tests</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-btn:hover {
+        text-decoration: underline;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .section {
+        margin-bottom: 3rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #333;
+      }
+
+      .assignments-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .assignment-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
+      }
+
+      .assignment-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .assignment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .assignment-info {
+        flex: 1;
+      }
+
+      .assignment-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .assignment-meta {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .assignment-description {
+        color: #555;
+        line-height: 1.5;
+      }
+
+      .assignment-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #e0e0e0;
+      }
+
+      .btn-secondary:hover {
+        background: #e9ecef;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-downloaded {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .assignment-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .status-completed {
+        color: #28a745;
+      }
+
+      .status-pending {
+        color: #ffc107;
+      }
+
+      .quiz-container {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+      }
+
+      .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .quiz-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .quiz-progress {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      .question {
+        margin-bottom: 1.5rem;
+      }
+
+      .question-text {
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .option:hover {
+        border-color: #667eea;
+        background: #f0f2ff;
+      }
+
+      .option.selected {
+        border-color: #667eea;
+        background: #e8ebff;
+      }
+
+      .option input[type="radio"] {
+        margin: 0;
+      }
+
+      .quiz-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+      }
+
+      .quiz-result {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #28a745;
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .score {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #28a745;
+        margin-bottom: 0.5rem;
+      }
+
+      .try-again-link {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+
+      .try-again-link:hover {
+        text-decoration: underline;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 0 1rem;
+        }
+
+        .assignment-header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .assignment-actions {
+          flex-wrap: wrap;
+        }
+
+        .quiz-actions {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+      <h1 class="page-title">Assignments & Tests</h1>
+    </header>
+
+    <main class="content">
+      <!-- Open Assignments Section -->
+      <section class="section">
+        <h2 class="section-title">Open Assignments</h2>
+        <div class="assignments-grid" id="openAssignments">
+          <div class="assignment-card" data-id="math-algebra-quiz">
+            <div class="assignment-header">
+              <div class="assignment-info">
+                <div class="assignment-title">Algebra Quiz Chapter 3</div>
+                <div class="assignment-meta">
+                  Mathematics • Due: Tomorrow • 15 minutes
+                </div>
+                <div class="assignment-description">
+                  Test your understanding of algebraic expressions, equations,
+                  and inequalities covered in Chapter 3.
+                </div>
+              </div>
+              <div class="assignment-status status-pending">⏰ Pending</div>
+            </div>
+            <div class="assignment-actions">
+              <button
+                class="btn btn-primary"
+                onclick="startAssignment('math-algebra-quiz')"
+              >
+                📝 Start Assignment
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="toggleDownload('math-algebra-quiz', 'Algebra Quiz Chapter 3', this)"
+              >
+                ⬇ Download for offline
+              </button>
+            </div>
+            <div
+              class="quiz-container hidden"
+              id="quiz-math-algebra-quiz"
+            ></div>
+          </div>
+
+          <div class="assignment-card" data-id="science-forces-test">
+            <div class="assignment-header">
+              <div class="assignment-info">
+                <div class="assignment-title">Forces and Motion Test</div>
+                <div class="assignment-meta">
+                  Science • Due: Next Week • 20 minutes
+                </div>
+                <div class="assignment-description">
+                  Comprehensive test covering Newton's laws, force calculations,
+                  and motion problems.
+                </div>
+              </div>
+              <div class="assignment-status status-pending">⏰ Pending</div>
+            </div>
+            <div class="assignment-actions">
+              <button
+                class="btn btn-primary"
+                onclick="startAssignment('science-forces-test')"
+              >
+                📝 Start Assignment
+              </button>
+              <button
+                class="btn btn-downloaded"
+                onclick="toggleDownload('science-forces-test', 'Forces and Motion Test', this)"
+              >
+                ✓ Available offline
+              </button>
+            </div>
+            <div
+              class="quiz-container hidden"
+              id="quiz-science-forces-test"
+            ></div>
+          </div>
+
+          <div class="assignment-card" data-id="ict-algorithms-homework">
+            <div class="assignment-header">
+              <div class="assignment-info">
+                <div class="assignment-title">Algorithm Design Homework</div>
+                <div class="assignment-meta">
+                  ICT • Due: Friday • 25 minutes
+                </div>
+                <div class="assignment-description">
+                  Practice problems on algorithm design, flowcharts, and
+                  pseudocode writing.
+                </div>
+              </div>
+              <div class="assignment-status status-pending">⏰ Pending</div>
+            </div>
+            <div class="assignment-actions">
+              <button
+                class="btn btn-primary"
+                onclick="startAssignment('ict-algorithms-homework')"
+              >
+                📝 Start Assignment
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="toggleDownload('ict-algorithms-homework', 'Algorithm Design Homework', this)"
+              >
+                ⬇ Download for offline
+              </button>
+            </div>
+            <div
+              class="quiz-container hidden"
+              id="quiz-ict-algorithms-homework"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Completed Assignments Section -->
+      <section class="section">
+        <h2 class="section-title">Completed Assignments</h2>
+        <div class="assignments-grid" id="completedAssignments">
+          <div class="assignment-card" data-id="physics-energy-quiz">
+            <div class="assignment-header">
+              <div class="assignment-info">
+                <div class="assignment-title">Energy and Work Quiz</div>
+                <div class="assignment-meta">
+                  Science • Completed 3 days ago • Score: 85%
+                </div>
+                <div class="assignment-description">
+                  Quiz on kinetic energy, potential energy, and work
+                  calculations.
+                </div>
+              </div>
+              <div class="assignment-status status-completed">✓ Completed</div>
+            </div>
+            <div class="assignment-actions">
+              <button class="btn btn-success" disabled>
+                ✓ Completed (85%)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Global state
+      let downloadedAssignments = ["science-forces-test"]; // Simulated downloads
+      let completedAssignments = ["physics-energy-quiz"]; // Simulated completed
+      let currentQuiz = null;
+
+      // Sample quiz data
+      const quizData = {
+        "math-algebra-quiz": {
+          title: "Algebra Quiz Chapter 3",
+          questions: [
+            {
+              question: "Solve for x: 2x + 5 = 13",
+              options: ["x = 3", "x = 4", "x = 5", "x = 6"],
+              correct: 1,
+            },
+            {
+              question: "Which expression is equivalent to 3(x + 2)?",
+              options: ["3x + 2", "3x + 6", "x + 6", "3x + 5"],
+              correct: 1,
+            },
+            {
+              question: "If y = 2x - 1 and x = 4, what is the value of y?",
+              options: ["6", "7", "8", "9"],
+              correct: 1,
+            },
+            {
+              question: "Solve the inequality: x + 3 > 7",
+              options: ["x > 4", "x > 10", "x < 4", "x < 10"],
+              correct: 0,
+            },
+          ],
+        },
+        "science-forces-test": {
+          title: "Forces and Motion Test",
+          questions: [
+            {
+              question:
+                "Newton's First Law states that an object at rest will:",
+              options: [
+                "Always move",
+                "Stay at rest unless acted upon by a force",
+                "Move at constant speed",
+                "Accelerate continuously",
+              ],
+              correct: 1,
+            },
+            {
+              question: "The unit of force is:",
+              options: ["Joule", "Watt", "Newton", "Pascal"],
+              correct: 2,
+            },
+            {
+              question: "If F = ma, and m = 5kg, a = 2m/s², then F = ?",
+              options: ["7N", "10N", "3N", "2.5N"],
+              correct: 1,
+            },
+            {
+              question:
+                "Which law explains why we feel pushed back in a car when it accelerates?",
+              options: [
+                "First Law",
+                "Second Law",
+                "Third Law",
+                "Law of Gravity",
+              ],
+              correct: 0,
+            },
+            {
+              question:
+                "The acceleration due to gravity on Earth is approximately:",
+              options: ["9.8 m/s²", "10.8 m/s²", "8.9 m/s²", "11.2 m/s²"],
+              correct: 0,
+            },
+          ],
+        },
+        "ict-algorithms-homework": {
+          title: "Algorithm Design Homework",
+          questions: [
+            {
+              question: "An algorithm is:",
+              options: [
+                "A computer program",
+                "A step-by-step procedure to solve a problem",
+                "A type of software",
+                "A programming language",
+              ],
+              correct: 1,
+            },
+            {
+              question:
+                "Which symbol is used for decision-making in flowcharts?",
+              options: ["Rectangle", "Circle", "Diamond", "Oval"],
+              correct: 2,
+            },
+            {
+              question: "What is pseudocode?",
+              options: [
+                "Real programming code",
+                "Broken code",
+                "Plain language description of algorithm steps",
+                "Machine language",
+              ],
+              correct: 2,
+            },
+            {
+              question:
+                "A loop that continues until a condition is met is called:",
+              options: [
+                "For loop",
+                "While loop",
+                "If statement",
+                "Switch statement",
+              ],
+              correct: 1,
+            },
+          ],
+        },
+      };
+
+      // Initialize page
+      window.onload = function () {
+        loadProgress();
+      };
+
+      // Load progress from localStorage (simulation)
+      function loadProgress() {
+        // In real environment: load from localStorage.progress
+        console.log("Loading student progress...");
+      }
+
+      // Start assignment quiz
+      function startAssignment(assignmentId) {
+        currentQuiz = assignmentId;
+        const quiz = quizData[assignmentId];
+        if (!quiz) return;
+
+        const quizContainer = document.getElementById(`quiz-${assignmentId}`);
+        quizContainer.innerHTML = generateQuizHTML(quiz, assignmentId);
+        quizContainer.classList.remove("hidden");
+
+        // Scroll to quiz
+        quizContainer.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Generate quiz HTML
+      function generateQuizHTML(quiz, assignmentId) {
+        let html = `
+                <div class="quiz-header">
+                    <div class="quiz-title">${quiz.title}</div>
+                    <div class="quiz-progress">Question 1 of ${quiz.questions.length}</div>
+                </div>
+            `;
+
+        quiz.questions.forEach((q, index) => {
+          html += `
+                    <div class="question">
+                        <div class="question-text">${index + 1}. ${
+            q.question
+          }</div>
+                        <div class="options">
+                `;
+
+          q.options.forEach((option, optIndex) => {
+            html += `
+                        <label class="option" onclick="selectOption(this)">
+                            <input type="radio" name="q${index}" value="${optIndex}">
+                            <span>${option}</span>
+                        </label>
+                    `;
+          });
+
+          html += `
+                        </div>
+                    </div>
+                `;
+        });
+
+        html += `
+                <div class="quiz-actions">
+                    <a href="#" class="try-again-link" onclick="resetQuiz('${assignmentId}')">Try another attempt</a>
+                    <button class="btn btn-success" onclick="submitQuiz('${assignmentId}')">Submit Assignment</button>
+                </div>
+            `;
+
+        return html;
+      }
+
+      // Select option visual feedback
+      function selectOption(label) {
+        // Remove selected class from siblings
+        const siblings = label.parentNode.querySelectorAll(".option");
+        siblings.forEach((sibling) => sibling.classList.remove("selected"));
+
+        // Add selected class to current option
+        label.classList.add("selected");
+      }
+
+      // Submit quiz
+      function submitQuiz(assignmentId) {
+        const quiz = quizData[assignmentId];
+        const quizContainer = document.getElementById(`quiz-${assignmentId}`);
+
+        let score = 0;
+        let totalQuestions = quiz.questions.length;
+
+        // Calculate score
+        quiz.questions.forEach((q, index) => {
+          const selectedOption = quizContainer.querySelector(
+            `input[name="q${index}"]:checked`
+          );
+          if (selectedOption && parseInt(selectedOption.value) === q.correct) {
+            score++;
+          }
+        });
+
+        const percentage = Math.round((score / totalQuestions) * 100);
+
+        // Save progress (simulation)
+        saveProgress(assignmentId, percentage);
+
+        // Show result
+        showQuizResult(quizContainer, score, totalQuestions, percentage);
+
+        // Move to completed section
+        moveToCompleted(assignmentId, percentage);
+      }
+
+      // Save progress
+      function saveProgress(assignmentId, score) {
+        const progressData = {
+          assignmentId: assignmentId,
+          score: score,
+          completedAt: new Date().toISOString(),
+        };
+
+        // In real environment:
+        // let progress = JSON.parse(localStorage.getItem('progress') || '[]');
+        // progress.push(progressData);
+        // localStorage.setItem('progress', JSON.stringify(progress));
+
+        console.log("Saving progress:", progressData);
+
+        // Update overall completion
+        updateProgressSummary();
+      }
+
+      // Update progress summary
+      function updateProgressSummary() {
+        // In real environment: calculate and save to localStorage.progressSummary
+        const totalAssignments = 4; // Total available assignments
+        const completedCount = completedAssignments.length + 1; // +1 for newly completed
+        const overallCompletion = Math.round(
+          (completedCount / totalAssignments) * 100
+        );
+
+        console.log("Overall completion:", overallCompletion + "%");
+      }
+
+      // Show quiz result
+      function showQuizResult(container, score, total, percentage) {
+        const actionsDiv = container.querySelector(".quiz-actions");
+        const resultHTML = `
+                <div class="quiz-result">
+                    <div class="score">${score}/${total} (${percentage}%)</div>
+                    <div>Assignment completed successfully!</div>
+                </div>
+            `;
+
+        actionsDiv.insertAdjacentHTML("afterend", resultHTML);
+        actionsDiv.style.display = "none";
+      }
+
+      // Move assignment to completed section
+      function moveToCompleted(assignmentId, score) {
+        setTimeout(() => {
+          const assignmentCard = document.querySelector(
+            `[data-id="${assignmentId}"]`
+          );
+          const openSection = document.getElementById("openAssignments");
+          const completedSection = document.getElementById(
+            "completedAssignments"
+          );
+
+          // Update assignment card
+          const statusElement =
+            assignmentCard.querySelector(".assignment-status");
+          statusElement.className = "assignment-status status-completed";
+          statusElement.innerHTML = "✓ Completed";
+
+          const metaElement = assignmentCard.querySelector(".assignment-meta");
+          metaElement.innerHTML = metaElement.innerHTML.replace(
+            /Due:.*?•/,
+            `Completed just now • Score: ${score}% •`
+          );
+
+          const actionsDiv = assignmentCard.querySelector(
+            ".assignment-actions"
+          );
+          actionsDiv.innerHTML = `
+                    <button class="btn btn-success" disabled>
+                        ✓ Completed (${score}%)
+                    </button>
+                `;
+
+          // Hide quiz container
+          const quizContainer = assignmentCard.querySelector(".quiz-container");
+          quizContainer.classList.add("hidden");
+
+          // Move to completed section
+          completedSection.appendChild(assignmentCard);
+          completedAssignments.push(assignmentId);
+        }, 2000);
+      }
+
+      // Reset quiz
+      function resetQuiz(assignmentId) {
+        const quizContainer = document.getElementById(`quiz-${assignmentId}`);
+
+        // Clear all selections
+        const radioButtons = quizContainer.querySelectorAll(
+          'input[type="radio"]'
+        );
+        radioButtons.forEach((radio) => (radio.checked = false));
+
+        // Clear visual selections
+        const options = quizContainer.querySelectorAll(".option");
+        options.forEach((option) => option.classList.remove("selected"));
+
+        // Remove result if exists
+        const result = quizContainer.querySelector(".quiz-result");
+        if (result) result.remove();
+
+        // Show actions again
+        const actions = quizContainer.querySelector(".quiz-actions");
+        actions.style.display = "flex";
+      }
+
+      // Check if assignment is downloaded
+      function isDownloaded(assignmentId) {
+        return downloadedAssignments.includes(assignmentId);
+      }
+
+      // Save download (simulation)
+      function saveDownload(downloadData) {
+        console.log("Saving download:", downloadData);
+        downloadedAssignments.push(downloadData.id);
+      }
+
+      // Remove download (simulation)
+      function removeDownload(assignmentId) {
+        downloadedAssignments = downloadedAssignments.filter(
+          (id) => id !== assignmentId
+        );
+        console.log("Removed download:", assignmentId);
+      }
+
+      // Toggle download state
+      function toggleDownload(assignmentId, title, button) {
+        if (isDownloaded(assignmentId)) {
+          // Remove download
+          removeDownload(assignmentId);
+          button.className = "btn btn-secondary";
+          button.innerHTML = "⬇ Download for offline";
+        } else {
+          // Add download
+          const quiz = quizData[assignmentId];
+          saveDownload({
+            type: "assignment",
+            id: assignmentId,
+            title: title,
+            content: JSON.stringify(quiz),
+          });
+          button.className = "btn btn-downloaded";
+          button.innerHTML = "✓ Available offline";
+        }
+      }
+
+      // Go back to dashboard
+      function goBack() {
+        window.location.href = "student-dashboard.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Progress Tracker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-btn:hover {
+        text-decoration: underline;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .progress-overview {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .main-progress {
+        margin-bottom: 2rem;
+      }
+
+      .main-percentage {
+        font-size: 4rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+      }
+
+      .main-label {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .overall-description {
+        color: #888;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .progress-bars {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .progress-item {
+        text-align: left;
+      }
+
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-label {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .progress-value {
+        color: #667eea;
+        font-weight: 600;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 4px;
+        transition: width 0.8s ease;
+      }
+
+      .section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .reset-link {
+        color: #dc3545;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 400;
+      }
+
+      .reset-link:hover {
+        text-decoration: underline;
+      }
+
+      .assignments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .assignment-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+      }
+
+      .assignment-info {
+        flex: 1;
+      }
+
+      .assignment-name {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .assignment-meta {
+        color: #666;
+        font-size: 0.85rem;
+      }
+
+      .assignment-score {
+        text-align: right;
+      }
+
+      .score-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #28a745;
+        margin-bottom: 0.25rem;
+      }
+
+      .score-date {
+        color: #888;
+        font-size: 0.8rem;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+      }
+
+      .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .empty-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .empty-description {
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+        transform: translateY(-1px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .score-excellent {
+        color: #28a745;
+      }
+
+      .score-good {
+        color: #ffc107;
+      }
+
+      .score-needs-work {
+        color: #dc3545;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 0 1rem;
+        }
+
+        .main-percentage {
+          font-size: 3rem;
+        }
+
+        .progress-bars {
+          grid-template-columns: 1fr;
+        }
+
+        .assignment-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+
+        .assignment-score {
+          align-self: flex-end;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+      <h1 class="page-title">Your Progress</h1>
+    </header>
+
+    <main class="content">
+      <!-- Progress Overview -->
+      <div class="progress-overview">
+        <div class="main-progress">
+          <div class="main-percentage" id="mainPercentage">0%</div>
+          <div class="main-label">Overall Completion</div>
+          <div class="overall-description" id="overallDescription">
+            Keep up the great work! Complete more assignments to improve your
+            progress.
+          </div>
+        </div>
+
+        <div class="progress-bars">
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label">Videos Watched</span>
+              <span class="progress-value" id="videosProgress">0/15</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                id="videosFill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label">Assignments Completed</span>
+              <span class="progress-value" id="assignmentsProgress">0/4</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                id="assignmentsFill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="section">
+        <h2 class="section-title">Quick Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalAssignments">0</div>
+            <div class="stat-label">Total Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="averageScore">0%</div>
+            <div class="stat-label">Average Score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="studyStreak">0</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed Assignments -->
+      <div class="section">
+        <h2 class="section-title">
+          Completed Assignments
+          <a href="#" class="reset-link" onclick="resetDemoData()"
+            >Reset demo data</a
+          >
+        </h2>
+
+        <div id="assignmentsList">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Global state
+      let progressData = [];
+      let progressSummary = {};
+
+      // Initialize page
+      window.onload = function () {
+        loadProgressData();
+        updateProgressDisplay();
+      };
+
+      // Load progress data (simulation of localStorage)
+      function loadProgressData() {
+        // In real environment:
+        // progressData = JSON.parse(localStorage.getItem('progress') || '[]');
+        // progressSummary = JSON.parse(localStorage.getItem('progressSummary') || '{}');
+
+        // Demo data simulation
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasProgress = urlParams.get("hasProgress") === "true";
+
+        if (hasProgress) {
+          // Simulate some completed assignments
+          progressData = [
+            {
+              assignmentId: "physics-energy-quiz",
+              score: 85,
+              completedAt: new Date(
+                Date.now() - 3 * 24 * 60 * 60 * 1000
+              ).toISOString(), // 3 days ago
+              title: "Energy and Work Quiz",
+              subject: "Science",
+            },
+            {
+              assignmentId: "math-basic-algebra",
+              score: 92,
+              completedAt: new Date(
+                Date.now() - 1 * 24 * 60 * 60 * 1000
+              ).toISOString(), // 1 day ago
+              title: "Basic Algebra Test",
+              subject: "Mathematics",
+            },
+          ];
+
+          progressSummary = {
+            overallCompletion: 50, // 2 out of 4 assignments
+            videosWatched: 8,
+            totalVideos: 15,
+            assignmentsCompleted: 2,
+            totalAssignments: 4,
+            averageScore: 88.5,
+            studyStreak: 3,
+          };
+        } else {
+          // Empty state
+          progressData = [];
+          progressSummary = {
+            overallCompletion: 0,
+            videosWatched: 0,
+            totalVideos: 15,
+            assignmentsCompleted: 0,
+            totalAssignments: 4,
+            averageScore: 0,
+            studyStreak: 0,
+          };
+        }
+      }
+
+      // Update progress display
+      function updateProgressDisplay() {
+        const hasProgress = progressData.length > 0;
+
+        if (hasProgress) {
+          showProgressData();
+        } else {
+          showEmptyState();
+        }
+
+        updateProgressBars();
+        updateQuickStats();
+      }
+
+      // Show progress data
+      function showProgressData() {
+        // Update main percentage
+        const mainPercentage = document.getElementById("mainPercentage");
+        const overallDescription =
+          document.getElementById("overallDescription");
+
+        mainPercentage.textContent = `${progressSummary.overallCompletion}%`;
+
+        // Update description based on progress
+        if (progressSummary.overallCompletion >= 80) {
+          overallDescription.textContent =
+            "Excellent work! You're almost done with all assignments.";
+        } else if (progressSummary.overallCompletion >= 50) {
+          overallDescription.textContent =
+            "Great progress! Keep it up to complete all your assignments.";
+        } else {
+          overallDescription.textContent =
+            "Good start! Complete more assignments to improve your progress.";
+        }
+
+        // Show assignments list
+        const assignmentsList = document.getElementById("assignmentsList");
+        assignmentsList.innerHTML = generateAssignmentsList();
+      }
+
+      // Show empty state
+      function showEmptyState() {
+        const assignmentsList = document.getElementById("assignmentsList");
+        assignmentsList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <div class="empty-title">No progress yet</div>
+                    <div class="empty-description">
+                        Start completing assignments and watching videos to track your learning progress.
+                    </div>
+                    <a href="student-assignments.html" class="btn btn-primary">
+                        📝 Go to Assignments
+                    </a>
+                </div>
+            `;
+      }
+
+      // Generate assignments list HTML
+      function generateAssignmentsList() {
+        if (progressData.length === 0) return "";
+
+        return progressData
+          .map((assignment) => {
+            const date = new Date(assignment.completedAt);
+            const formattedDate = date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
+
+            const scoreClass = getScoreClass(assignment.score);
+
+            return `
+                    <div class="assignment-item">
+                        <div class="assignment-info">
+                            <div class="assignment-name">${
+                              assignment.title
+                            }</div>
+                            <div class="assignment-meta">${
+                              assignment.subject
+                            } • Completed ${formattedDate}</div>
+                        </div>
+                        <div class="assignment-score">
+                            <div class="score-value ${scoreClass}">${
+              assignment.score
+            }%</div>
+                            <div class="score-date">${getRelativeTime(
+                              date
+                            )}</div>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      // Get score CSS class based on percentage
+      function getScoreClass(score) {
+        if (score >= 90) return "score-excellent";
+        if (score >= 70) return "score-good";
+        return "score-needs-work";
+      }
+
+      // Get relative time (e.g., "3 days ago")
+      function getRelativeTime(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "1 day ago";
+        return `${diffDays} days ago`;
+      }
+
+      // Update progress bars
+      function updateProgressBars() {
+        // Videos progress
+        const videosProgress = document.getElementById("videosProgress");
+        const videosFill = document.getElementById("videosFill");
+        const videosPercentage = Math.round(
+          (progressSummary.videosWatched / progressSummary.totalVideos) * 100
+        );
+
+        videosProgress.textContent = `${progressSummary.videosWatched}/${progressSummary.totalVideos}`;
+        setTimeout(() => {
+          videosFill.style.width = `${videosPercentage}%`;
+        }, 500);
+
+        // Assignments progress
+        const assignmentsProgress = document.getElementById(
+          "assignmentsProgress"
+        );
+        const assignmentsFill = document.getElementById("assignmentsFill");
+        const assignmentsPercentage = Math.round(
+          (progressSummary.assignmentsCompleted /
+            progressSummary.totalAssignments) *
+            100
+        );
+
+        assignmentsProgress.textContent = `${progressSummary.assignmentsCompleted}/${progressSummary.totalAssignments}`;
+        setTimeout(() => {
+          assignmentsFill.style.width = `${assignmentsPercentage}%`;
+        }, 700);
+      }
+
+      // Update quick stats
+      function updateQuickStats() {
+        document.getElementById("totalAssignments").textContent =
+          progressSummary.assignmentsCompleted;
+        document.getElementById("averageScore").textContent =
+          progressSummary.averageScore + "%";
+        document.getElementById("studyStreak").textContent =
+          progressSummary.studyStreak;
+      }
+
+      // Reset demo data
+      function resetDemoData() {
+        if (
+          confirm(
+            "Are you sure you want to reset your progress data? This will clear all completed assignments and progress tracking."
+          )
+        ) {
+          // In real environment:
+          // localStorage.removeItem('progress');
+          // localStorage.removeItem('progressSummary');
+
+          // Reset demo data
+          progressData = [];
+          progressSummary = {
+            overallCompletion: 0,
+            videosWatched: 0,
+            totalVideos: 15,
+            assignmentsCompleted: 0,
+            totalAssignments: 4,
+            averageScore: 0,
+            studyStreak: 0,
+          };
+
+          // Update display
+          updateProgressDisplay();
+
+          // Show confirmation
+          alert("Demo data has been reset successfully!");
+        }
+      }
+
+      // Go back to dashboard
+      function goBack() {
+        window.location.href = "student-dashboard.html";
+      }
+    </script>
+  </body>
+</html>

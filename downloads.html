@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Downloads</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-btn:hover {
+        text-decoration: underline;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-subtitle {
+        color: #666;
+        font-size: 1rem;
+      }
+
+      .content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .info-banner {
+        background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        border: 1px solid #c3e6cb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .info-icon {
+        font-size: 2rem;
+        color: #28a745;
+      }
+
+      .info-content {
+        flex: 1;
+      }
+
+      .info-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #155724;
+        margin-bottom: 0.5rem;
+      }
+
+      .info-text {
+        color: #155724;
+        line-height: 1.5;
+      }
+
+      .storage-info {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+
+      .storage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .storage-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .clear-all-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+
+      .clear-all-btn:hover {
+        background: #c82333;
+      }
+
+      .storage-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .filter-select {
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        min-width: 150px;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .downloads-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .download-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+      }
+
+      .download-icon {
+        width: 40px;
+        height: 40px;
+        background: #667eea;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .download-info {
+        flex: 1;
+      }
+
+      .download-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .download-meta {
+        color: #666;
+        font-size: 0.85rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .download-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+      }
+
+      .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #e0e0e0;
+      }
+
+      .btn-secondary:hover {
+        background: #e9ecef;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+      }
+
+      .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .empty-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .empty-description {
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
+
+      .file-size {
+        color: #28a745;
+        font-weight: 500;
+      }
+
+      .offline-badge {
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 500;
+      }
+
+      .last-accessed {
+        color: #888;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 0 1rem;
+        }
+
+        .info-banner {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .storage-header {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .filter-controls {
+          flex-direction: column;
+        }
+
+        .download-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.75rem;
+        }
+
+        .download-meta {
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .download-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+      <h1 class="page-title">Downloads</h1>
+      <p class="page-subtitle">Your offline content library</p>
+    </header>
+
+    <main class="content">
+      <!-- Info Banner -->
+      <div class="info-banner">
+        <div class="info-icon">📱</div>
+        <div class="info-content">
+          <div class="info-title">Study Offline Anywhere</div>
+          <div class="info-text">
+            Downloaded content is stored locally on your device so you can study
+            even without an internet connection. Perfect for commuting, travel,
+            or areas with poor connectivity!
+          </div>
+        </div>
+      </div>
+
+      <!-- Storage Information -->
+      <div class="storage-info">
+        <div class="storage-header">
+          <h2 class="storage-title">Storage Overview</h2>
+          <button class="clear-all-btn" onclick="clearAllDownloads()">
+            Clear All Downloads
+          </button>
+        </div>
+        <div class="storage-stats">
+          <div class="stat-card">
+            <div class="stat-number" id="totalItems">0</div>
+            <div class="stat-label">Total Items</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalSize">0 MB</div>
+            <div class="stat-label">Storage Used</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="videosCount">0</div>
+            <div class="stat-label">Videos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="assignmentsCount">0</div>
+            <div class="stat-label">Assignments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videos Section -->
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">🎥 Downloaded Videos</h2>
+        </div>
+
+        <div class="filter-controls">
+          <input
+            type="text"
+            class="search-input"
+            id="videoSearch"
+            placeholder="Search videos..."
+          />
+          <select class="filter-select" id="videoSubjectFilter">
+            <option value="">All Subjects</option>
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="english">English</option>
+            <option value="ict">ICT</option>
+          </select>
+        </div>
+
+        <div class="downloads-list" id="videosList">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Assignments Section -->
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">📝 Downloaded Assignments</h2>
+        </div>
+
+        <div class="filter-controls">
+          <input
+            type="text"
+            class="search-input"
+            id="assignmentSearch"
+            placeholder="Search assignments..."
+          />
+          <select class="filter-select" id="assignmentSubjectFilter">
+            <option value="">All Subjects</option>
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="english">English</option>
+            <option value="ict">ICT</option>
+          </select>
+        </div>
+
+        <div class="downloads-list" id="assignmentsList">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Global state
+      let downloadedVideos = [];
+      let downloadedAssignments = [];
+
+      // Initialize page
+      window.onload = function () {
+        loadDownloads();
+        setupFilters();
+        updateStorageStats();
+      };
+
+      // Load downloads from localStorage (simulation)
+      function loadDownloads() {
+        // In real environment:
+        // downloadedVideos = JSON.parse(localStorage.getItem('downloadedVideos') || '[]');
+        // downloadedAssignments = JSON.parse(localStorage.getItem('downloadedAssignments') || '[]');
+
+        // Demo data
+        downloadedVideos = [
+          {
+            id: "math-quadratic",
+            title: "Quadratic Functions",
+            subject: "math",
+            grade: "grade-10",
+            duration: "32 minutes",
+            size: "245 MB",
+            downloadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+            lastAccessed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          },
+          {
+            id: "science-newton",
+            title: "Newton's Laws of Motion",
+            subject: "science",
+            grade: "grade-10",
+            duration: "28 minutes",
+            size: "198 MB",
+            downloadedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+            lastAccessed: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          },
+          {
+            id: "ict-algorithms",
+            title: "Introduction to Algorithms",
+            subject: "ict",
+            grade: "grade-10",
+            duration: "30 minutes",
+            size: "210 MB",
+            downloadedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+            lastAccessed: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          },
+        ];
+
+        downloadedAssignments = [
+          {
+            id: "science-forces-test",
+            title: "Forces and Motion Test",
+            subject: "science",
+            grade: "grade-10",
+            questions: 5,
+            size: "2.1 MB",
+            downloadedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+            lastAccessed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          },
+          {
+            id: "math-algebra-quiz",
+            title: "Algebra Quiz Chapter 3",
+            subject: "math",
+            grade: "grade-10",
+            questions: 4,
+            size: "1.8 MB",
+            downloadedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+            lastAccessed: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          },
+        ];
+
+        displayDownloads();
+      }
+
+      // Setup filter event listeners
+      function setupFilters() {
+        document
+          .getElementById("videoSearch")
+          .addEventListener("input", filterVideos);
+        document
+          .getElementById("videoSubjectFilter")
+          .addEventListener("change", filterVideos);
+        document
+          .getElementById("assignmentSearch")
+          .addEventListener("input", filterAssignments);
+        document
+          .getElementById("assignmentSubjectFilter")
+          .addEventListener("change", filterAssignments);
+      }
+
+      // Display downloads
+      function displayDownloads() {
+        displayVideos();
+        displayAssignments();
+      }
+
+      // Display videos
+      function displayVideos() {
+        const videosList = document.getElementById("videosList");
+
+        if (downloadedVideos.length === 0) {
+          videosList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎥</div>
+                        <div class="empty-title">No videos downloaded</div>
+                        <div class="empty-description">
+                            Download videos from your classes to watch them offline anywhere, anytime.
+                        </div>
+                        <a href="student-videos.html" class="btn btn-primary">Browse Videos</a>
+                    </div>
+                `;
+          return;
+        }
+
+        const html = downloadedVideos
+          .map(
+            (video) => `
+                <div class="download-item" data-subject="${
+                  video.subject
+                }" data-title="${video.title.toLowerCase()}">
+                    <div class="download-icon">🎥</div>
+                    <div class="download-info">
+                        <div class="download-title">${video.title}</div>
+                        <div class="download-meta">
+                            <span>${capitalizeSubject(
+                              video.subject
+                            )} • ${video.grade.replace(
+              "grade-",
+              "Grade "
+            )}</span>
+                            <span>${video.duration}</span>
+                            <span class="file-size">${video.size}</span>
+                            <span class="offline-badge">Available Offline</span>
+                        </div>
+                        <div class="download-meta">
+                            <span>Downloaded: ${formatDate(
+                              video.downloadedAt
+                            )}</span>
+                            <span class="last-accessed">Last watched: ${formatRelativeTime(
+                              video.lastAccessed
+                            )}</span>
+                        </div>
+                    </div>
+                    <div class="download-actions">
+                        <button class="btn btn-primary" onclick="playOfflineVideo('${
+                          video.id
+                        }')">
+                            ▶ Play
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteVideo('${
+                          video.id
+                        }')">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        videosList.innerHTML = html;
+      }
+
+      // Display assignments
+      function displayAssignments() {
+        const assignmentsList = document.getElementById("assignmentsList");
+
+        if (downloadedAssignments.length === 0) {
+          assignmentsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <div class="empty-title">No assignments downloaded</div>
+                        <div class="empty-description">
+                            Download assignments and quizzes to complete them offline when you don't have internet access.
+                        </div>
+                        <a href="student-assignments.html" class="btn btn-primary">Browse Assignments</a>
+                    </div>
+                `;
+          return;
+        }
+
+        const html = downloadedAssignments
+          .map(
+            (assignment) => `
+                <div class="download-item" data-subject="${
+                  assignment.subject
+                }" data-title="${assignment.title.toLowerCase()}">
+                    <div class="download-icon">📝</div>
+                    <div class="download-info">
+                        <div class="download-title">${assignment.title}</div>
+                        <div class="download-meta">
+                            <span>${capitalizeSubject(
+                              assignment.subject
+                            )} • ${assignment.grade.replace(
+              "grade-",
+              "Grade "
+            )}</span>
+                            <span>${assignment.questions} questions</span>
+                            <span class="file-size">${assignment.size}</span>
+                            <span class="offline-badge">Available Offline</span>
+                        </div>
+                        <div class="download-meta">
+                            <span>Downloaded: ${formatDate(
+                              assignment.downloadedAt
+                            )}</span>
+                            <span class="last-accessed">Last accessed: ${formatRelativeTime(
+                              assignment.lastAccessed
+                            )}</span>
+                        </div>
+                    </div>
+                    <div class="download-actions">
+                        <button class="btn btn-primary" onclick="openOfflineAssignment('${
+                          assignment.id
+                        }')">
+                            📝 Open
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteAssignment('${
+                          assignment.id
+                        }')">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        assignmentsList.innerHTML = html;
+      }
+
+      // Filter videos
+      function filterVideos() {
+        const searchTerm = document
+          .getElementById("videoSearch")
+          .value.toLowerCase();
+        const subjectFilter =
+          document.getElementById("videoSubjectFilter").value;
+
+        const videoItems = document.querySelectorAll(
+          "#videosList .download-item"
+        );
+        videoItems.forEach((item) => {
+          const title = item.dataset.title;
+          const subject = item.dataset.subject;
+
+          const matchesSearch = !searchTerm || title.includes(searchTerm);
+          const matchesSubject = !subjectFilter || subject === subjectFilter;
+
+          item.style.display =
+            matchesSearch && matchesSubject ? "flex" : "none";
+        });
+      }
+
+      // Filter assignments
+      function filterAssignments() {
+        const searchTerm = document
+          .getElementById("assignmentSearch")
+          .value.toLowerCase();
+        const subjectFilter = document.getElementById(
+          "assignmentSubjectFilter"
+        ).value;
+
+        const assignmentItems = document.querySelectorAll(
+          "#assignmentsList .download-item"
+        );
+        assignmentItems.forEach((item) => {
+          const title = item.dataset.title;
+          const subject = item.dataset.subject;
+
+          const matchesSearch = !searchTerm || title.includes(searchTerm);
+          const matchesSubject = !subjectFilter || subject === subjectFilter;
+
+          item.style.display =
+            matchesSearch && matchesSubject ? "flex" : "none";
+        });
+      }
+
+      // Update storage statistics
+      function updateStorageStats() {
+        const totalVideos = downloadedVideos.length;
+        const totalAssignments = downloadedAssignments.length;
+        const totalItems = totalVideos + totalAssignments;
+
+        // Calculate total size (simplified)
+        const videoSizes = downloadedVideos.map((v) => parseInt(v.size));
+        const assignmentSizes = downloadedAssignments.map((a) =>
+          parseFloat(a.size)
+        );
+        const totalSizeMB =
+          videoSizes.reduce((sum, size) => sum + size, 0) +
+          assignmentSizes.reduce((sum, size) => sum + size, 0);
+
+        document.getElementById("totalItems").textContent = totalItems;
+        document.getElementById("totalSize").textContent =
+          totalSizeMB.toFixed(1) + " MB";
+        document.getElementById("videosCount").textContent = totalVideos;
+        document.getElementById("assignmentsCount").textContent =
+          totalAssignments;
+      }
+
+      // Play offline video
+      function playOfflineVideo(videoId) {
+        const video = downloadedVideos.find((v) => v.id === videoId);
+        if (video) {
+          // Update last accessed time
+          video.lastAccessed = new Date();
+          alert(
+            `Playing offline video: ${video.title}\n\nThis would open your local video player in a real app.`
+          );
+          displayVideos(); // Refresh to show updated access time
+        }
+      }
+
+      // Open offline assignment
+      function openOfflineAssignment(assignmentId) {
+        const assignment = downloadedAssignments.find(
+          (a) => a.id === assignmentId
+        );
+        if (assignment) {
+          // Update last accessed time
+          assignment.lastAccessed = new Date();
+          alert(
+            `Opening offline assignment: ${assignment.title}\n\nThis would load the assignment offline in a real app.`
+          );
+          displayAssignments(); // Refresh to show updated access time
+        }
+      }
+
+      // Delete video
+      function deleteVideo(videoId) {
+        const video = downloadedVideos.find((v) => v.id === videoId);
+        if (
+          video &&
+          confirm(
+            `Delete "${video.title}"?\n\nThis will free up ${video.size} of storage space.`
+          )
+        ) {
+          downloadedVideos = downloadedVideos.filter((v) => v.id !== videoId);
+          displayVideos();
+          updateStorageStats();
+
+          // In real environment: update localStorage
+          // localStorage.setItem('downloadedVideos', JSON.stringify(downloadedVideos));
+        }
+      }
+
+      // Delete assignment
+      function deleteAssignment(assignmentId) {
+        const assignment = downloadedAssignments.find(
+          (a) => a.id === assignmentId
+        );
+        if (assignment && confirm(`Delete "${assignment.title}"?`)) {
+          downloadedAssignments = downloadedAssignments.filter(
+            (a) => a.id !== assignmentId
+          );
+          displayAssignments();
+          updateStorageStats();
+
+          // In real environment: update localStorage
+          // localStorage.setItem('downloadedAssignments', JSON.stringify(downloadedAssignments));
+        }
+      }
+
+      // Clear all downloads
+      function clearAllDownloads() {
+        if (
+          confirm(
+            "Delete all downloaded content?\n\nThis will free up all storage space but you'll need internet to access the content again."
+          )
+        ) {
+          downloadedVideos = [];
+          downloadedAssignments = [];
+          displayDownloads();
+          updateStorageStats();
+
+          // In real environment: clear localStorage
+          // localStorage.removeItem('downloadedVideos');
+          // localStorage.removeItem('downloadedAssignments');
+
+          alert("All downloads cleared successfully!");
+        }
+      }
+
+      // Utility functions
+      function capitalizeSubject(subject) {
+        const subjects = {
+          math: "Mathematics",
+          science: "Science",
+          english: "English",
+          ict: "ICT",
+          history: "History",
+        };
+        return subjects[subject] || subject;
+      }
+
+      function formatDate(date) {
+        return new Date(date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function formatRelativeTime(date) {
+        const now = new Date();
+        const diffMs = now - new Date(date);
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffHours < 1) return "Just now";
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays === 1) return "1 day ago";
+        return `${diffDays} days ago`;
+      }
+
+      // Go back to dashboard
+      function goBack() {
+        window.location.href = "student-dashboard.html";
+      }
+    </script>
+  </body>
+</html>

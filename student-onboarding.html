@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Student Onboarding</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #667eea;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .back-btn:hover {
+        text-decoration: underline;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .helper-text {
+        color: #888;
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      select,
+      input[type="number"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      select:focus,
+      input[type="number"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .subjects-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .subject-chip {
+        background: #f0f2f5;
+        border: 2px solid transparent;
+        color: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+      }
+
+      .subject-chip:hover {
+        background: #e6e9f0;
+      }
+
+      .subject-chip.selected {
+        background: #667eea;
+        color: white;
+        border-color: #5a6fd8;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .form-group.error select,
+      .form-group.error input {
+        border-color: #e74c3c;
+      }
+
+      .continue-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+      }
+
+      .continue-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .continue-btn:focus {
+        outline: 3px solid #4c9aff;
+        outline-offset: 2px;
+      }
+
+      .continue-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+
+      <div class="header">
+        <h1>Let's get to know you!</h1>
+        <div class="subtitle">Tell us a bit about yourself</div>
+        <div class="helper-text">You can change this later in your profile</div>
+      </div>
+
+      <form id="onboardingForm">
+        <div class="form-group">
+          <label for="grade">What grade are you in?</label>
+          <select id="grade" required>
+            <option value="">Select your grade</option>
+            <option value="grade-6">Grade 6</option>
+            <option value="grade-7">Grade 7</option>
+            <option value="grade-8">Grade 8</option>
+            <option value="grade-9">Grade 9</option>
+            <option value="grade-10">Grade 10</option>
+            <option value="grade-11">Grade 11</option>
+            <option value="grade-12">Grade 12</option>
+            <option value="university">University</option>
+          </select>
+          <div class="error-message" id="grade-error">
+            Please select your grade
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="age">How old are you?</label>
+          <input
+            type="number"
+            id="age"
+            min="10"
+            max="30"
+            placeholder="Enter your age"
+            required
+          />
+          <div class="error-message" id="age-error">
+            Please enter a valid age (10-30)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>What subjects are you interested in?</label>
+          <div class="helper-text" style="margin-bottom: 0.5rem">
+            Select all that apply
+          </div>
+          <div class="subjects-container">
+            <div class="subject-chip" data-subject="math">Mathematics</div>
+            <div class="subject-chip" data-subject="science">Science</div>
+            <div class="subject-chip" data-subject="english">English</div>
+            <div class="subject-chip" data-subject="ict">ICT</div>
+            <div class="subject-chip" data-subject="history">History</div>
+            <div class="subject-chip" data-subject="geography">Geography</div>
+            <div class="subject-chip" data-subject="art">Art</div>
+            <div class="subject-chip" data-subject="music">Music</div>
+            <div class="subject-chip" data-subject="pe">Physical Education</div>
+          </div>
+          <div class="error-message" id="subjects-error">
+            Please select at least one subject
+          </div>
+        </div>
+
+        <button type="submit" class="continue-btn">Save and Continue</button>
+      </form>
+    </div>
+
+    <script>
+      // Global variables for form data
+      let selectedSubjects = [];
+
+      // Initialize the form
+      window.onload = function () {
+        loadExistingProfile();
+        setupSubjectChips();
+      };
+
+      // Load existing profile if it exists (simulation for demo)
+      function loadExistingProfile() {
+        // In real environment, would use: const profile = JSON.parse(localStorage.getItem('studentProfile') || '{}');
+        // For demo, we'll simulate this
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasProfile = urlParams.get("hasProfile") === "true";
+
+        if (hasProfile) {
+          // Simulate existing data
+          document.getElementById("grade").value = "grade-10";
+          document.getElementById("age").value = "16";
+          selectedSubjects = ["math", "science", "ict"];
+          updateSubjectChips();
+        }
+      }
+
+      // Setup subject chip interactions
+      function setupSubjectChips() {
+        const chips = document.querySelectorAll(".subject-chip");
+        chips.forEach((chip) => {
+          chip.addEventListener("click", function () {
+            const subject = this.dataset.subject;
+            toggleSubject(subject);
+            clearError("subjects");
+          });
+        });
+      }
+
+      // Toggle subject selection
+      function toggleSubject(subject) {
+        const index = selectedSubjects.indexOf(subject);
+        if (index > -1) {
+          selectedSubjects.splice(index, 1);
+        } else {
+          selectedSubjects.push(subject);
+        }
+        updateSubjectChips();
+      }
+
+      // Update visual state of subject chips
+      function updateSubjectChips() {
+        const chips = document.querySelectorAll(".subject-chip");
+        chips.forEach((chip) => {
+          const subject = chip.dataset.subject;
+          if (selectedSubjects.includes(subject)) {
+            chip.classList.add("selected");
+          } else {
+            chip.classList.remove("selected");
+          }
+        });
+      }
+
+      // Form validation
+      function validateForm() {
+        let isValid = true;
+
+        // Clear previous errors
+        clearAllErrors();
+
+        // Validate grade
+        const grade = document.getElementById("grade").value;
+        if (!grade) {
+          showError("grade", "Please select your grade");
+          isValid = false;
+        }
+
+        // Validate age
+        const age = parseInt(document.getElementById("age").value);
+        if (!age || age < 10 || age > 30) {
+          showError("age", "Please enter a valid age (10-30)");
+          isValid = false;
+        }
+
+        // Validate subjects
+        if (selectedSubjects.length === 0) {
+          showError("subjects", "Please select at least one subject");
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // Show error message
+      function showError(field, message) {
+        const formGroup =
+          document.getElementById(field).closest(".form-group") ||
+          document.querySelector(`#${field}-error`).closest(".form-group");
+        const errorElement = document.getElementById(`${field}-error`);
+
+        formGroup.classList.add("error");
+        errorElement.textContent = message;
+        errorElement.classList.add("show");
+      }
+
+      // Clear specific error
+      function clearError(field) {
+        const formGroup =
+          document.getElementById(field)?.closest(".form-group") ||
+          document.querySelector(`#${field}-error`)?.closest(".form-group");
+        const errorElement = document.getElementById(`${field}-error`);
+
+        if (formGroup) formGroup.classList.remove("error");
+        if (errorElement) errorElement.classList.remove("show");
+      }
+
+      // Clear all errors
+      function clearAllErrors() {
+        const errorElements = document.querySelectorAll(".error-message");
+        const formGroups = document.querySelectorAll(".form-group");
+
+        errorElements.forEach((el) => el.classList.remove("show"));
+        formGroups.forEach((el) => el.classList.remove("error"));
+      }
+
+      // Handle form submission
+      document
+        .getElementById("onboardingForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (validateForm()) {
+            const profile = {
+              grade: document.getElementById("grade").value,
+              age: parseInt(document.getElementById("age").value),
+              interests: selectedSubjects,
+            };
+
+            // In real environment: localStorage.setItem('studentProfile', JSON.stringify(profile));
+            console.log("Student Profile:", profile);
+
+            // Navigate to dashboard
+            window.location.href = "student-dashboard.html?profileSaved=true";
+          }
+        });
+
+      // Clear errors on input
+      document
+        .getElementById("grade")
+        .addEventListener("change", () => clearError("grade"));
+      document
+        .getElementById("age")
+        .addEventListener("input", () => clearError("age"));
+
+      // Go back function
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  </body>
+</html>

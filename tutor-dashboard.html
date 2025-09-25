@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Tutor Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .welcome {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .filters-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        min-width: 200px;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      select {
+        padding: 0.5rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 0.9rem;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .dashboard-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .expand-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+      }
+
+      .expand-btn:hover {
+        background: #5a6fd8;
+      }
+
+      .card-content {
+        display: none;
+      }
+
+      .card-content.expanded {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-family: inherit;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-input {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border: 2px dashed #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #666;
+      }
+
+      .file-input-label:hover {
+        border-color: #667eea;
+        background: #f0f2ff;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-right: 0.5rem;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+      }
+
+      .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #e0e0e0;
+      }
+
+      .btn-secondary:hover {
+        background: #e9ecef;
+      }
+
+      .content-list,
+      .quiz-list {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #f0f0f0;
+        border-radius: 6px;
+        margin-top: 1rem;
+      }
+
+      .content-item,
+      .quiz-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .content-item:last-child,
+      .quiz-item:last-child {
+        border-bottom: none;
+      }
+
+      .item-info {
+        flex: 1;
+      }
+
+      .item-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .item-meta {
+        color: #666;
+        font-size: 0.8rem;
+      }
+
+      .item-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .metric-card {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .metric-number {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.25rem;
+      }
+
+      .metric-label {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .question-group {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .question-input {
+        margin-bottom: 0.75rem;
+      }
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .correct-answer {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .share-link {
+        background: #e8f5e8;
+        color: #2d7d2d;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .share-link:hover {
+        background: #d4f4d4;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+          padding: 0 1rem;
+        }
+
+        .header {
+          padding: 1rem;
+        }
+
+        .header-top {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .filters-row {
+          flex-wrap: wrap;
+        }
+
+        .options-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-top">
+        <h1 class="welcome">Welcome, <span id="tutorName">Tutor</span>!</h1>
+        <div class="filters-row">
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search your content..."
+          />
+          <select id="subjectFilter">
+            <option value="">All Subjects</option>
+            <option value="math">Mathematics</option>
+            <option value="science">Science</option>
+            <option value="english">English</option>
+            <option value="ict">ICT</option>
+          </select>
+          <select id="gradeFilter">
+            <option value="">All Grades</option>
+            <option value="grade-8">Grade 8</option>
+            <option value="grade-9">Grade 9</option>
+            <option value="grade-10">Grade 10</option>
+            <option value="grade-11">Grade 11</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <!-- Upload Content Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Upload Video Class or PDF</h2>
+          <button class="expand-btn" onclick="toggleCard('upload-card')">
+            Add Content
+          </button>
+        </div>
+        <div class="card-content" id="upload-card">
+          <form id="uploadForm">
+            <div class="form-group">
+              <label for="contentTitle">Title</label>
+              <input
+                type="text"
+                id="contentTitle"
+                placeholder="Enter video/PDF title"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="contentSubject">Subject</label>
+              <select id="contentSubject" required>
+                <option value="">Select subject</option>
+                <option value="math">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="english">English</option>
+                <option value="ict">ICT</option>
+                <option value="history">History</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contentGrade">Grade</label>
+              <select id="contentGrade" required>
+                <option value="">Select grade</option>
+                <option value="grade-8">Grade 8</option>
+                <option value="grade-9">Grade 9</option>
+                <option value="grade-10">Grade 10</option>
+                <option value="grade-11">Grade 11</option>
+                <option value="grade-12">Grade 12</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contentDesc">Description</label>
+              <textarea
+                id="contentDesc"
+                placeholder="Brief description of the content..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>File</label>
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="contentFile"
+                  class="file-input"
+                  accept=".mp4,.pdf,.mov,.avi"
+                />
+                <label for="contentFile" class="file-input-label">
+                  📎 Choose Video or PDF File
+                </label>
+              </div>
+              <small style="color: #888; display: block; margin-top: 0.5rem">
+                Note: Files are simulated for demo purposes
+              </small>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Upload Content
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="toggleCard('upload-card')"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+
+        <div class="content-list" id="contentList">
+          <div class="empty-state">No content uploaded yet</div>
+        </div>
+      </div>
+
+      <!-- Create Quiz Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Create Assignment/Quiz</h2>
+          <button class="expand-btn" onclick="toggleCard('quiz-card')">
+            Create Quiz
+          </button>
+        </div>
+        <div class="card-content" id="quiz-card">
+          <form id="quizForm">
+            <div class="form-group">
+              <label for="quizTitle">Quiz Title</label>
+              <input
+                type="text"
+                id="quizTitle"
+                placeholder="Enter quiz title"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="quizSubject">Subject</label>
+              <select id="quizSubject" required>
+                <option value="">Select subject</option>
+                <option value="math">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="english">English</option>
+                <option value="ict">ICT</option>
+                <option value="history">History</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="quizGrade">Grade</label>
+              <select id="quizGrade" required>
+                <option value="">Select grade</option>
+                <option value="grade-8">Grade 8</option>
+                <option value="grade-9">Grade 9</option>
+                <option value="grade-10">Grade 10</option>
+                <option value="grade-11">Grade 11</option>
+                <option value="grade-12">Grade 12</option>
+              </select>
+            </div>
+
+            <div id="questionsContainer">
+              <div class="question-group">
+                <h4>Question 1</h4>
+                <input
+                  type="text"
+                  class="question-input"
+                  placeholder="Enter your question"
+                  required
+                />
+                <div class="options-grid">
+                  <input type="text" placeholder="Option A" required />
+                  <input type="text" placeholder="Option B" required />
+                  <input type="text" placeholder="Option C" required />
+                  <input type="text" placeholder="Option D" required />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
